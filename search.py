@@ -17,6 +17,11 @@ In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
 
+# from asyncore import loop
+# from msilib.schema import Error
+# from msilib.schema import Error
+# from sre_parse import State
+# from importlib.resources import path
 import util
 
 class SearchProblem:
@@ -87,12 +92,63 @@ def depthFirstSearch(problem: SearchProblem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    node = (problem.getStartState(), '', 0, [])
+    fringe = util.Stack()
+    fringe.push(node)
+    explored = set()
+
+    while(True):
+        if( fringe.isEmpty()):
+            return None
+        node = fringe.pop()
+        if( problem.isGoalState(node[0]) == True):
+            return node[3]
+        explored.add(node[0])
+        l = problem.getSuccessors(node[0])
+        for i in l:
+            not_in = True
+            for j in explored:
+                if( i[0] == j):
+                    not_in = False
+            if( not_in == True):
+                path = node[3] + [i[1]]
+                temp_node = (i[0], i[1], i[2], path)
+                fringe.push(temp_node)
+    # util.raiseNotDefined()
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    node = (problem.getStartState(), '', 0, [])
+    fringe = util.Queue()
+    fringe.push(node)
+    explored = set()
+    neighbors = set()
+    neighbors.add(node[0])
+
+    while(True):
+        if( fringe.isEmpty()):
+            return None
+        node = fringe.pop()
+        if( problem.isGoalState(node[0]) == True):
+            return node[3]
+        explored.add(node[0])
+        l = problem.getSuccessors(node[0])
+        for i in l:
+            not_in = True
+            not_in_geitones = True
+            for j in explored:
+                if( i[0] == j):
+                    not_in = False
+            for j in neighbors:
+                if( i[0] == j):
+                    not_in_geitones = False
+            if( not_in == True and not_in_geitones == True):
+                path = node[3] + [i[1]]
+                temp_node = (i[0], i[1], i[2], path)
+                fringe.push(temp_node)
+                neighbors.add(temp_node[0])
+    # util.raiseNotDefined()
 
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
