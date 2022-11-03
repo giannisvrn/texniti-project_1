@@ -153,7 +153,40 @@ def breadthFirstSearch(problem: SearchProblem):
 def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    node = (problem.getStartState(), '', 0, [],0)
+    fringe = util.PriorityQueue()
+    fringe.push(node,node[4])
+    explored = set()
+    neighbors = set()
+    neighbors.add((node[0],node[4]))         # Kratame kai to path_cost twn neighbors
+
+    while(True):
+        if( fringe.isEmpty()):
+            return None
+        node = fringe.pop()
+        explored.add(node[0])
+        if( problem.isGoalState(node[0]) == True):
+            return node[3]
+        l = problem.getSuccessors(node[0])
+        for i in l:
+            child = (i[0],i[1],i[2],node[3] + [i[1]], problem.getCostOfActions(node[3]+[i[1]]))
+            not_in = True
+            not_in_geitones = True
+            for j in explored:
+                if( child[0] == j):
+                    not_in = False
+            for j in neighbors:
+                if( child[0] == j[0]):
+                    not_in_geitones = False
+                    break
+            if( not_in == True and not_in_geitones == True):         # ean den yparxei to state tote to prosthetoume sto frontier kai stous neighbors
+                fringe.push(child,child[4])
+                neighbors.add((child[0],child[4]))
+            else:
+                if( child[4] < j[1]):      # ean to path to neighbor einai megalytero apo to kainourio path tote eisagoume to kainourio
+                    fringe.push(child,child[4])
+
+    # util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
     """
