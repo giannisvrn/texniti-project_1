@@ -386,18 +386,13 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     if(problem.isGoalState(state)):  # ean ftasame sto goal state tote epistrefoume apla 0
         return 0
 
-    j = 0
     k = 0
+    temp = []
     for i in state[1]:           # vriskei thn megalyterh apostasi apo tis gwnies tis opoies den exoume episkeftei kai thn epistrefei
         if( i == False):
-            temp = manhattanDistance(state[0],corners[k])
-            if( j == 0):
-                max = temp
-            elif(temp > max):
-                max = temp
-            j += 1
+            temp.append(manhattanDistance(state[0],corners[k]))
         k += 1
-    return max
+    return max(temp)
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
@@ -491,8 +486,15 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    # from util import manhattanDistance
+    if( problem.isGoalState(state)):    # ean ftasame sto goal state tote epistrefoume apla 0
+        return 0
 
+    distance_list = []     # mia lista me ola ta distances apo to position mexri kai ola ta foods
+    for i in foodGrid.asList():
+        distance_list.append(mazeDistance(position,i,problem.startingGameState))
+    return max(distance_list)     # epistrefoume to megisto distance ths listas
+    
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
     def registerInitialState(self, state):
