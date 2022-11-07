@@ -299,14 +299,20 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        corn = (False,False,False,False)
+        return (self.startingPosition,corn)     # epistrefei ena tuple me to position kai me 0 gwnies na exoume episkeftei
+        # util.raiseNotDefined()
 
     def isGoalState(self, state: Any):
         """
         Returns whether this search state is a goal state of the problem.
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        for i in state[1]:
+            if( i == False):  # otan vrei mia gwnia sthn opoia den exoume paei epistrefei false
+                return False
+        return True
+        # # util.raiseNotDefined()
 
     def getSuccessors(self, state: Any):
         """
@@ -327,9 +333,21 @@ class CornersProblem(search.SearchProblem):
             #   dx, dy = Actions.directionToVector(action)
             #   nextx, nexty = int(x + dx), int(y + dy)
             #   hitsWall = self.walls[nextx][nexty]
-
             "*** YOUR CODE HERE ***"
-
+            xy,_corn = state
+            x = xy[0]
+            y = xy[1]
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
+            if not (hitsWall):
+                if( (nextx,nexty) in self.corners): 
+                    temp = list(_corn)          # to metatrepoume proswrina se lista gia na mporesoume na allaksoume thn timh enos stoixeioy toy tuple
+                    temp[self.corners.index((nextx,nexty))] = True    # apothikeyoyme oti exoume episkeftei thn sygkekrimenh gwnia
+                    _corn = tuple(temp)
+                nextstate = ((nextx,nexty),_corn)
+                successors.append( ( nextstate,action,1 ) )
+            
         self._expanded += 1 # DO NOT CHANGE
         return successors
 
